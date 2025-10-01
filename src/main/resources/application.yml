@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    default: local-h2
+
+server:
+  port: 8080
