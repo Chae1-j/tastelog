@@ -1,0 +1,12 @@
+각 파일별 설명
+
+1. build.gradle
+- 빌드와 의존성을 관리.
+2. settings.gradle
+- 프로젝트 이름과 멀티모듈 구성을 정의
+    ex) rootProject.name = "tastelog"
+3. TasteLogApplication
+- 애플리케이션 진입점.
+- @SpringBootApplication 어노테치션
+4. application.yml
+- 환경설정 중앙화
