@@ -1,5 +1,8 @@
 package com.tastelog.user;
 
+import com.tastelog.user.dto.UserRegisterRequest;
+import com.tastelog.user.dto.UserRegisterResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +17,28 @@ public class UserController {
 
     private final UserService userService;
 
+//    @PostMapping("/register")
+//    public ResponseEntity<User> register(@RequestBody User user) {
+//        User saved = userService.registerUser(user);
+//        return ResponseEntity.ok(saved); // User객체를 JSON으로 응답. 200 OK를 함께 반환
+//    }
+
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register(@RequestBody User user) {
+//        try {
+//            User saved = userService.registerUser(user);
+//            return ResponseEntity.ok(saved);
+//        } catch (Exception e) {
+//            e.printStackTrace(); // 콘솔에 정확한 예외 확인
+//            return ResponseEntity.internalServerError().body(e.getClass().getSimpleName() + ": " + e.getMessage());
+//        }
+//    }
+
+
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User saved = userService.registerUser(user);
-        return ResponseEntity.ok(saved); // User객체를 JSON으로 응답. 200 OK를 함께 반환
+    public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest req) {
+        UserRegisterResponse res = userService.register(req);
+        return ResponseEntity.ok(res);
     }
 }
 

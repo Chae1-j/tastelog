@@ -11,6 +11,9 @@ public interface UserRepository extends JpaRepository<User, Long> { // 제네릭
 
     // 특정 이메일이 존재하는지 여부 확인
     boolean existsByEmail(String email);
+
+    // 닉네임이 중복되는지 확인
+    boolean existsByNickname(String nickname);
 }
 
 /*
