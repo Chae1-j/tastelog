@@ -50,16 +50,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // 스프링 설정 클래스로 등록. @Bean의 메서드 들을 스프링 컨테이너에 등록
+@EnableWebSecurity // 스프링 싴리티 웹 보안 기능 활성화. 필터체인 구성하게 해줌
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // csrf 공격 방식 방어하는 기능. 운영단계에서 활성화해야함
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // 모든 HTTP 요청의 단
                 );
         return http.build();
     }
@@ -69,3 +69,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+/*
+
+* 프로젝트 전체의 보안 설정 중심축
+
+
+ */
