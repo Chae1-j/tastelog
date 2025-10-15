@@ -42,25 +42,41 @@
 
 package com.tastelog.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration // 스프링 설정 클래스로 등록. @Bean의 메서드 들을 스프링 컨테이너에 등록
 @EnableWebSecurity // 스프링 싴리티 웹 보안 기능 활성화. 필터체인 구성하게 해줌
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.disable()) // csrf 공격 방식 방어하는 기능. 운영단계에서 활성화해야함
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll() // 모든 HTTP 요청의 단
+//                );
         http
-                .csrf(csrf -> csrf.disable()) // csrf 공격 방식 방어하는 기능. 운영단계에서 활성화해야함
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 모든 HTTP 요청의 단
-                );
+                        .requestMatchers("/api/users/register", "/api/auth/login", "/h2-console/**").permitAll()
+                    .anyRequest().authenticated()
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.headers(headers -> headers.frameOptions(frame-> frame.sameOrigin()));
+
+        http.formLogin(f -> f.disable()).httpBasic(b -> b.disable());
+
         return http.build();
     }
 
