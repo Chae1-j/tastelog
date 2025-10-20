@@ -45,6 +45,8 @@ package com.tastelog.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -69,10 +71,21 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/auth/login", "/h2-console/**").permitAll()
-                    .anyRequest().authenticated()
+                        // 로그인 허용 (v1/비버전 둘 다 대비)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/auth/login").permitAll()
+                        // 회원가입 허용 (POST /api/v1/users 또는 /api/users/register 사용 케이스 동시 허용)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/users/register").permitAll()
+                        // (선택) refresh 도입 예정이면 미리 허용
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh", "/api/auth/refresh").permitAll()
+                        // H2 콘솔
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // 그 외 보호
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                // CORS 기본값 (필요 시 별도 Bean 제공)
+                .cors(Customizer.withDefaults());
+
         http.headers(headers -> headers.frameOptions(frame-> frame.sameOrigin()));
 
         http.formLogin(f -> f.disable()).httpBasic(b -> b.disable());

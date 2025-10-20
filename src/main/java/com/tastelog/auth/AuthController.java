@@ -16,8 +16,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest req) {
+        // ResponseEntity<T>는 HTTP 상태코드, 헤더, 바디를 모두 제어할 수 있는 컨테이너.
+        // @RequestBody 요청 바디(JSON)을 LoginRequest로 역직렬화. 키 이름 - DTO 필드명
+        // @Valid LoginRequest에 선언된 Bean Validation을 메서드 진입 전에 검사.
+        // LoginRequest req 역직렬화, 검증을 통과한 안전한 입력 객체
+
         LoginResponse res = authService.login(req);
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(res); // LoginResponse가 JSON으로 직렬화되어 응답됨.
     }
 }
 

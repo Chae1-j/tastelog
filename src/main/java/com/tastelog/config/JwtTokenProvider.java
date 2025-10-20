@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -48,9 +50,31 @@ public class JwtTokenProvider {
         }
     }
 
+    /** (신규) 필터에서 사용할 이름 - validate와 동일 동작 */
+    public boolean validateToken(String token) {
+        return validate(token);
+    }
+
+    /** (신규) Claims 공용 파서 */
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     public String getSubject(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    /** (신규) roles 클레임을 List<String>으로 반환 */
+    @SuppressWarnings("unchecked")
+    public List<String> getRoles(String token) {
+        Object raw = getClaims(token).get(ROLES);
+        if (raw instanceof List<?>) {
+            return ((List<?>) raw).stream().map(String::valueOf).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }
