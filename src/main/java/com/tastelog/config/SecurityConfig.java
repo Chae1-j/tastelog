@@ -69,17 +69,17 @@ public class SecurityConfig {
 //                );
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션을 안 쓰겠다고 선언
                 .authorizeHttpRequests(auth -> auth
                         // 로그인 허용 (v1/비버전 둘 다 대비)
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/auth/login").permitAll()
                         // 회원가입 허용 (POST /api/v1/users 또는 /api/users/register 사용 케이스 동시 허용)
                         .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/users/register").permitAll()
-                        // (선택) refresh 도입 예정이면 미리 허용
+                        // (선택) refresh 도입 예정이면 미리 허용 토킅 재발급 주소 허용
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh", "/api/auth/refresh").permitAll()
-                        // H2 콘솔
+                        // H2 콘솔 누구나 가능
                         .requestMatchers("/h2-console/**").permitAll()
-                        // 그 외 보호
+                        // 그 외(나머지는 jwt있어야 접근 가능함) 보호
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -96,12 +96,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    } // 비밀번호 암호화해서 저장/검증하기 위한 도구.
 }
 
 /*
 
-* 프로젝트 전체의 보안 설정 중심축
-
+* 프로젝트 전체의 보안 설정 중심축 (문단속 규칙표)
 
  */
