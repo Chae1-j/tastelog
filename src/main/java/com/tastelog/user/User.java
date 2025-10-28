@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Entity // 이 클래스가 JPA에서 DB테이블과 매핑되는 엔티티임을 표시
 @Getter // Lombok 어노테이션 > 필드마다 getter/setter 자동생성
 @Setter // 이하 동일
@@ -28,6 +30,27 @@ public class User {
 
     @NotBlank
     private String nickname;
+
+    @Column(length = 13)
+    private String phone;  // 전화번호 (예: 010-1234-5678)
+
+    @Column(length = 200)
+    private String bio;  // 자기소개글
+
+    @Column(length = 255)
+    private String avatarUrl;  // 프로필 이미지 주소
+
+    @Column
+    private OffsetDateTime createdAt = OffsetDateTime.now();
+
+    @Column
+    private OffsetDateTime updatedAt = OffsetDateTime.now();
+
+    @PreUpdate
+    // JPA 생명주기 어노테이션 : 엔티티 객체가 데이터베이스에 업데이트 되기 직전에 자동으로 실행되는 메서드 지정 >> 로그 기록용!
+    public void onUpdate() {
+        this.updatedAt = OffsetDateTime.now();
+    }
 }
 
 /*

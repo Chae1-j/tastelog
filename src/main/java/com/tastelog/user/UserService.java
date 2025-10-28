@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.OffsetDateTime;
+
+import com.tastelog.user.dto.UserProfileResponse;
+import com.tastelog.user.dto.UserProfileUpdateRequest;
 
 @Service // 스프링의 서비스 계층 컴포넌트임을 표시. 컨트롤러와 레포지토리 사이에서 비즈니스 로직(규칙/처리)를 담당
 @RequiredArgsConstructor // Lombok 어노테이션. final이 붙은 필드들에 자동으로 생성자 주입. 스프링이 의존성을 넣어줌
@@ -36,6 +40,72 @@ public class UserService {
         User saved = userRepository.save(user);
         return new UserRegisterResponse(saved.getId(), saved.getEmail(), saved.getNickname());
     }
+
+    /**
+     * 현재 로그인한 사용자의 프로필을 조회.
+     * @param userId 토큰에서 추출한 본인 식별자
+     * @return UserProfileResponse (민감정보 제외한 조회용 DTO)
+     */
+    public UserProfileResponse getMyProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        return toUserProfileResponse(user);
+    }
+
+    /**
+     * 현재 로그인한 사용자의 프로필을 수정합니다.
+     * - null인 필드는 '미변경'
+     * - 빈 문자열은 '비우기(덮어쓰기)'로 처리합니다.
+     * @param userId 토큰에서 추출한 본인 식별자
+     * @param request 수정 요청 DTO
+     * @return 수정 후 최신 프로필 DTO
+     */
+    public UserProfileResponse updateMyProfile(Long userId, UserProfileUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // null → 변경하지 않음, null이 아니면 그대로 덮어씀(빈문자 포함)
+        if (request.getNickname() != null) {
+            user.setNickname(request.getNickname());
+        }
+        if (request.getPhone() != null) {
+            user.setPhone(request.getPhone());
+        }
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+
+        // 수정 시각 갱신 (엔티티에 필드가 있다면)
+        try {
+            user.setUpdatedAt(OffsetDateTime.now());
+        } catch (Exception ignore) {
+            // 엔티티에 updatedAt 세터가 없거나 JPA Auditing 사용 시 무시
+        }
+
+        User saved = userRepository.save(user);
+        return toUserProfileResponse(saved);
+    }
+
+    /**
+     * User 엔티티 → UserProfileResponse 매핑 도우미
+     * 엔티티의 민감정보(비밀번호/권한 등)는 DTO로 노출하지 않습니다.
+     */
+    private UserProfileResponse toUserProfileResponse(User user) {
+        return new UserProfileResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getPhone(),
+                user.getBio(),
+                user.getAvatarUrl(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
+
 
 }
 

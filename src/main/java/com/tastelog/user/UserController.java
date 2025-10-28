@@ -1,14 +1,17 @@
 package com.tastelog.user;
 
+import com.tastelog.common.response.ApiResponse;
+import com.tastelog.user.dto.UserProfileResponse;
+import com.tastelog.user.dto.UserProfileUpdateRequest;
 import com.tastelog.user.dto.UserRegisterRequest;
 import com.tastelog.user.dto.UserRegisterResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController // REST API 요청을 처리하는 컨트롤러임을 표시. 메서드 리턴값 JSON형태로 자동 변환
 @RequiredArgsConstructor // final이 붙은 필드 자동으로 생성자 주입. Lombok 어노테이션
@@ -35,11 +38,49 @@ public class UserController {
 //    }
 
 
+//    @PostMapping("/register")
+//    public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest req) {
+//        UserRegisterResponse res = userService.register(req);
+//        return ResponseEntity.ok(res);
+//    }
+
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest req) {
-        UserRegisterResponse res = userService.register(req);
-        return ResponseEntity.ok(res);
+    public ResponseEntity<ApiResponse<UserRegisterResponse>> register(@Valid @RequestBody UserRegisterRequest request) {
+        UserRegisterResponse result = userService.register(request);
+        return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> getMyProfile() {
+        Long userId = currentUserId();  // 보안 컨텍스트에서 현재 로그인한 사용자 ID를 추출. JWT 인증 필터가 미리 넣어둔 값을 읽는 구조
+        UserProfileResponse result = userService.getMyProfile(userId);
+        return ResponseEntity.ok(ApiResponse.ok(result));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> updateMyProfile(@Valid @RequestBody UserProfileUpdateRequest request) {
+        Long userId = currentUserId();
+        UserProfileResponse result = userService.updateMyProfile(userId, request);
+        return ResponseEntity.ok(ApiResponse.ok(result));
+    }
+
+    /*
+	  SecurityContext에 저장된 인증 정보에서 현재 로그인 사용자의 식별자(userId)를 추출.
+	  - JwtAuthenticationFilter에서 Authentication의 name(=getName())을 userId 문자열로 설정해두었다는 전제.
+	  - 인증 정보가 없거나 형식이 잘못된 경우 예외를 던져 전역 예외 처리기로 위임.
+     */
+    private Long currentUserId() {  // 현재 로그인한 사용자의 ID를 가져오는 기능 발급된 JWT 토큰이 Security Context에 저장
+        Authentication auth =  SecurityContextHolder.getContext().getAuthentication(); // 스프링 시큐리티의 보안 컨텍스트에서 현재 요청의 인증 객체를 꺼냄
+        if(auth == null || auth.getName() == null) {
+            throw new AuthenticationCredentialsNotFoundException("인증이 필요합니다."); // 로그인 정보가 없을 때 예외를 던짐. 즉 토근이 없거나 만료된 경우.
+        }
+        try {
+            return Long.parseLong(auth.getName());
+        } catch (NumberFormatException e) { // 포맷오류
+            throw new IllegalStateException("잘못된 인증 정보 형식입니다."); // 
+        }
+    }
+
 }
 
 /*
