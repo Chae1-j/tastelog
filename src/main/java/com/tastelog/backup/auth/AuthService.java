@@ -1,10 +1,10 @@
-package com.tastelog.auth;
+package com.tastelog.backup.auth;
 
-import com.tastelog.auth.dto.LoginRequest;
-import com.tastelog.auth.dto.LoginResponse;
-import com.tastelog.config.JwtTokenProvider;
-import com.tastelog.user.User;
-import com.tastelog.user.UserRepository;
+import com.tastelog.backup.auth.dto.LoginRequest;
+import com.tastelog.backup.auth.dto.LoginResponse;
+import com.tastelog.backup.config.JwtTokenProvider;
+import com.tastelog.backup.user.User;
+import com.tastelog.backup.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

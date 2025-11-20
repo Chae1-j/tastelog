@@ -1,4 +1,4 @@
-package com.tastelog.common.exception;
+package com.tastelog.backup.common.exception;
 
 import jakarta.servlet.http.HttpServletRequest; // 사용자가 어떤 주소를 어떤 방식으로 요청했는지 등 요청 정보를 받기위해 필요.
 import jakarta.validation.ConstraintViolation;
@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice; // 전역 �
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 //import java.time.OffsetDateTime;    // 시간을 기록
-import java.time.OffsetDateTime;
 import java.util.LinkedHashMap; // 입력 순서 그대로 유지
 import java.util.Map;
 import java.util.stream.Collectors; // 목록을 맵으로 바꾸는 등의 데이터 묶기용
-import com.tastelog.common.response.ApiResponse;
+import com.tastelog.backup.common.response.ApiResponse;
 
 @Slf4j  // 로그 사용 가능
 @RestControllerAdvice   // 전역 에러 컨트롤러로 선언

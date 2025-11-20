@@ -1,15 +1,15 @@
-package com.tastelog.user;
+package com.tastelog.backup.user;
 
-import com.tastelog.user.dto.UserRegisterRequest;
-import com.tastelog.user.dto.UserRegisterResponse;
+import com.tastelog.backup.user.dto.UserRegisterRequest;
+import com.tastelog.backup.user.dto.UserRegisterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 
-import com.tastelog.user.dto.UserProfileResponse;
-import com.tastelog.user.dto.UserProfileUpdateRequest;
+import com.tastelog.backup.user.dto.UserProfileResponse;
+import com.tastelog.backup.user.dto.UserProfileUpdateRequest;
 
 @Service // 스프링의 서비스 계층 컴포넌트임을 표시. 컨트롤러와 레포지토리 사이에서 비즈니스 로직(규칙/처리)를 담당
 @RequiredArgsConstructor // Lombok 어노테이션. final이 붙은 필드들에 자동으로 생성자 주입. 스프링이 의존성을 넣어줌

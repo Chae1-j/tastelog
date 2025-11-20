@@ -1,8 +1,8 @@
-package com.tastelog.auth;
+package com.tastelog.backup.auth;
 
-import com.tastelog.auth.dto.LoginRequest;
-import com.tastelog.auth.dto.LoginResponse;
-import com.tastelog.common.response.ApiResponse;
+import com.tastelog.backup.auth.dto.LoginRequest;
+import com.tastelog.backup.auth.dto.LoginResponse;
+import com.tastelog.backup.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

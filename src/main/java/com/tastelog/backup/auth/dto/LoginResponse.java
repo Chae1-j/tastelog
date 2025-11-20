@@ -1,4 +1,4 @@
-package com.tastelog.auth.dto;
+package com.tastelog.backup.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

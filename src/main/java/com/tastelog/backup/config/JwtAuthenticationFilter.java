@@ -1,4 +1,4 @@
-package com.tastelog.config;
+package com.tastelog.backup.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

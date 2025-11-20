@@ -1,4 +1,4 @@
-package com.tastelog.config;
+package com.tastelog.backup.config;
 
 import io.jsonwebtoken.*; // 토큰 생성/ 서명/ 검증/ 클레임 파싱 담당
 import io.jsonwebtoken.security.Keys;

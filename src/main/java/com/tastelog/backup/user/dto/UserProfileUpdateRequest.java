@@ -1,4 +1,4 @@
-package com.tastelog.user.dto;
+package com.tastelog.backup.user.dto;
 
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;

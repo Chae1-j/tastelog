@@ -1,10 +1,10 @@
-package com.tastelog.user;
+package com.tastelog.backup.user;
 
-import com.tastelog.common.response.ApiResponse;
-import com.tastelog.user.dto.UserProfileResponse;
-import com.tastelog.user.dto.UserProfileUpdateRequest;
-import com.tastelog.user.dto.UserRegisterRequest;
-import com.tastelog.user.dto.UserRegisterResponse;
+import com.tastelog.backup.common.response.ApiResponse;
+import com.tastelog.backup.user.dto.UserProfileResponse;
+import com.tastelog.backup.user.dto.UserProfileUpdateRequest;
+import com.tastelog.backup.user.dto.UserRegisterRequest;
+import com.tastelog.backup.user.dto.UserRegisterResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

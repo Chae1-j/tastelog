@@ -1,4 +1,4 @@
-package com.tastelog.common.response;
+package com.tastelog.backup.common.response;
 
 import java.time.OffsetDateTime;    // 타임존 오프셋을 포함한 시간 표현
 import java.time.ZoneOffset; // UTC 오프셋 상수 제공

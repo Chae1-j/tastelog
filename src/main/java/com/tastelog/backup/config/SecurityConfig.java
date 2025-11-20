@@ -40,7 +40,7 @@
 //
 // */
 
-package com.tastelog.config;
+package com.tastelog.backup.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

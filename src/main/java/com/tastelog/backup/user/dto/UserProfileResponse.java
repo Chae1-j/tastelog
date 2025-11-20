@@ -1,4 +1,4 @@
-package com.tastelog.user.dto;
+package com.tastelog.backup.user.dto;
 
 import java.time.OffsetDateTime;
 

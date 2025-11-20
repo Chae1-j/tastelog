@@ -1,4 +1,4 @@
-package com.tastelog.user;
+package com.tastelog.backup.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
