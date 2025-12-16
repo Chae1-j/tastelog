@@ -3,7 +3,6 @@ package com.tastelog.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.UniqueElements;
 
 public class UserRegisterRequest {
 
@@ -13,12 +12,13 @@ public class UserRegisterRequest {
     private String email;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(min=10, max = 64)
     private String password;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 50)
     private String name;
+
 
     public String getEmail() {
         return email;
