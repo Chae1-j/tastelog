@@ -4,3 +4,9 @@ spring:
 
 server:
   port: 8080
+---
+# --- : 새로운 문서로 취급. 작성하면 spring 두 번 작성 가능
+spring:
+  config:
+    activate:
+      on-profile: local-h2
